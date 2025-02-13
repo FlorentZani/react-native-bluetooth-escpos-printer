@@ -1,39 +1,58 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
-    ext {
-        buildToolsVersion = "27.0.3"
-        minSdkVersion = 16
-        compileSdkVersion = 27
-        targetSdkVersion = 26
-        supportLibVersion = "27.1.1"
-    }
     repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        mavenLocal()
-        google()
-        jcenter()
+        mavenCentral() // ✅ Use Maven Central instead
+        google() // ✅ Always include Google's repository
+        maven {
+            url = uri("https://repo.spring.io/plugins-release/")
+        }
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
     }
+
+    dependencies {
+        // This is an old Gradle plugin version; consider updating
+        classpath 'com.android.tools.build:gradle:7.4.2'  // ✅ Updated Gradle version
+    }
 }
 
+apply plugin: 'com.android.library'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
-    distributionUrl = distributionUrl.replace("bin", "all")
+android {
+    compileSdkVersion 34  // ✅ Ensure this matches your project
+
+    defaultConfig {
+        minSdkVersion 24  // ✅ Update this to match your project
+        targetSdkVersion 34  // ✅ Match the latest stable version
+        versionCode 1
+        versionName "1.0"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            aidl.srcDirs = ['src/main/java']
+        }
+    }
+}
+
+repositories {
+    mavenCentral() // ✅ Use Maven Central instead
+    google()
+    maven {
+        url = uri("https://repo.spring.io/plugins-release/")
+    }
+    maven {
+        url "$rootDir/../node_modules/react-native/android"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.facebook.react:react-native:+'
+    implementation "com.google.zxing:core:3.3.0"
 }
